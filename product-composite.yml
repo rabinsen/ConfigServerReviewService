@@ -123,6 +123,13 @@ resilience4j.circuitbreaker:
       ignoreExceptions:
         - se.magnus.api.exceptions.InvalidInputException
         - se.magnus.api.exceptions.NotFoundException
+resilience4j.retry:
+  instances:
+    product:
+      maxAttempts: 3
+      waitDuration: 1000
+      retryExceptions:
+        - org.springframework.web.reactive.function.client.WebClientResponseException$InternalServerError
 
 ---
 spring.config.activate.on-profile: docker
