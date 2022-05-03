@@ -96,16 +96,18 @@ spring.cloud.stream:
 
 spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
 
-logging:
-  level:
-    root: INFO
-    se.magnus: DEBUG
-    org.springframework.web.server.adapter.HttpWebHandlerAdapter: TRACE
-
 resilience4j.timelimiter:
   instances:
     product:
       timeoutDuration: 2s
+
+resilience4j.retry:
+  instances:
+    product:
+      maxAttempts: 3
+      waitDuration: 1000
+      retryExceptions:
+      - org.springframework.web.reactive.function.client.WebClientResponseException$InternalServerError
 
 management.health.circuitbreakers.enabled: true
 
@@ -123,13 +125,12 @@ resilience4j.circuitbreaker:
       ignoreExceptions:
         - se.magnus.api.exceptions.InvalidInputException
         - se.magnus.api.exceptions.NotFoundException
-resilience4j.retry:
-  instances:
-    product:
-      maxAttempts: 3
-      waitDuration: 1000
-      retryExceptions:
-        - org.springframework.web.reactive.function.client.WebClientResponseException$InternalServerError
+
+logging:
+  level:
+    root: INFO
+    se.magnus: DEBUG
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: TRACE
 
 ---
 spring.config.activate.on-profile: docker
